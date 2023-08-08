@@ -5,9 +5,7 @@ on:
       - release
     tags:
       - "v*.*.*"
-    types: 
-      - closed
-      - labeled
+    types: [labeled, closed]
 jobs:
   if_merged:
     if: github.event.pull_request.merged == true
