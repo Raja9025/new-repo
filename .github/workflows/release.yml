@@ -44,6 +44,13 @@ jobs:
           cond: "${{ startsWith(github.ref, 'refs/tags/') }}"
           if_true: ${{ github.ref }}
           if_false: ${{ steps.bumpr.outputs.next_version }}
+      
+      #Create Changelog
+      - name: Changelog
+        uses: Bullrich/generate-release-changelog@master
+        id: Changelog
+        env:
+          REPO: ${{ github.repository }}
           
       # Create release.
       - uses: actions/create-release@v1
@@ -54,7 +61,9 @@ jobs:
         with:
           tag_name: ${{ steps.tag.outputs.value }}
           release_name: Release ${{ steps.tag.outputs.value }}
-          body: ${{ steps.bumpr.outputs.message }}
+          body: |
+                  ${{ steps.bumpr.outputs.message }}
+                  ${{ steps.Changelog.outputs.changelog }}
           draft: false
           prerelease: false
           
