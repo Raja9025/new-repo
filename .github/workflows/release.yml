@@ -51,7 +51,7 @@ jobs:
         uses: loopwerk/tag-changelog@v1
         with:
           token: ${{secrets.SEC}}
-          exclude_types: other,perf
+          exclude_types: other,doc,chore
           
       # Create release.
       - uses: actions/create-release@v1
@@ -64,7 +64,7 @@ jobs:
           release_name: Release ${{ steps.tag.outputs.value }}
           body: |
                   ${{ steps.bumpr.outputs.message }}
-                  ${{ steps.changelog.outputs.changelog }}
+                  ${{ steps.changelog.outputs.changes }}
           generate_release_notes: true
           draft: false
           prerelease: false
