@@ -46,12 +46,12 @@ jobs:
           if_false: ${{ steps.bumpr.outputs.next_version }}
           
   #Create ChangeLog
-      - name: Create changelog text
+      - name: Update CHANGELOG
         id: changelog
-        uses: loopwerk/tag-changelog@v1
+        uses: ./
         with:
           token: ${{secrets.SEC}}
-          exclude_types: other,doc,chore
+          tag: ${{ steps.tag.outputs.value }}
           
       # Create release.
       - uses: actions/create-release@v1
