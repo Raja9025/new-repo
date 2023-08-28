@@ -46,23 +46,19 @@ jobs:
           if_false: ${{ steps.bumpr.outputs.next_version }}
           
   #Create ChangeLog
-  changelog:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v2
-      - name: conventional Changelog Action
-        id: changelog
-        uses: TriPSs/conventional-changelog-action@v3.7.1
+      - name: Update Changelog
+        uses: heinrichreimer/github-changelog-generator-action@v2.1.1
         with:
-          github-token: ${{secrets.SEC}}
-          skip-version-file: 'true'
-          skip-on-empty: 'false'
-          output-file: "false" 
+          token: ${{ secrets.GITHUB_TOKEN }}
+          issues: true
+          issuesWoLabels: true
+          pullRequests: true
+          prWoLabels: true
+          addSections: '{"documentation":{"prefix":"**Documentation:**","labels":["documentation"]}}'
           
       # Create release.
       - uses: actions/create-release@v1
-        if: | 
-               "steps.tag.outputs.value != ''" && ${{ steps.changelog.outputs.skipped == 'false' }}
+        if: "steps.tag.outputs.value != ''" 
         env:
           # This token is provided by Actions, you do not need to create your own token
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -71,7 +67,7 @@ jobs:
           release_name: Release ${{ steps.tag.outputs.value }}
           body: |
                   ${{ steps.bumpr.outputs.message }}
-                  ${{ steps.changelog.outputs.clean_changelog }}
+                  ${{ steps.changelog_reader.outputs.log_entry }}
           generate_release_notes: true
           draft: false
           prerelease: false
