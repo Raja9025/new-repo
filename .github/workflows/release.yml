@@ -45,6 +45,17 @@ jobs:
           if_true: ${{ github.ref }}
           if_false: ${{ steps.bumpr.outputs.next_version }}
           
+  #Create ChangeLog
+  changelog:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: conventional Changelog Action
+        id: changelog
+        uses: TriPSs/conventional-changelog-action@v3.7.1
+        with:
+          github-token: ${{secrets.SEC}}
+          
       # Create release.
       - uses: actions/create-release@v1
         if: "steps.tag.outputs.value != ''"
@@ -56,17 +67,12 @@ jobs:
           release_name: Release ${{ steps.tag.outputs.value }}
           body: |
                   ${{ steps.bumpr.outputs.message }}
+                  ${{ steps.changelog.outputs.clean_changelog }}
           generate_release_notes: true
           draft: false
           prerelease: false
   
-  changelog:
-    runs-on: ubuntu-20.04
-    steps:
-      - name: "✏️ Generate release changelog"
-        uses: heinrichreimer/github-changelog-generator-action@v2.3
-        with:
-          token: ${{secrets.SEC}}         
+          
 #  release-check:
 #    if: github.event.action == 'labeled'
 #    runs-on: ubuntu-latest
