@@ -50,7 +50,7 @@ jobs:
         id: changelog
         uses: loopwerk/tag-changelog@v1
         with:
-          token: ${{ secrets.GITHUB_TOKEN }}
+          token: ${{secrets.SEC}}
           exclude_types: other,perf
           
       # Create release.
@@ -64,7 +64,7 @@ jobs:
           release_name: Release ${{ steps.tag.outputs.value }}
           body: |
                   ${{ steps.bumpr.outputs.message }}
-                  ${{ steps.changelog.outputs.changes }}
+                  ${{ steps.changelog.outputs.changelog }}
           generate_release_notes: true
           draft: false
           prerelease: false
