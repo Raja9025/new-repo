@@ -46,18 +46,12 @@ jobs:
           if_false: ${{ steps.bumpr.outputs.next_version }}
           
   #Create ChangeLog
-      - name: Checkout Code
-        uses: actions/checkout@v2
+      - name: Update changelog
+        id: get-changelog
+        uses: superfaceai/release-changelog-action@v1
         with:
-          token: ${{secrets.SEC}}
-          fetch-depth: 0
-
-      - name: Update CHANGELOG
-        id: changelog
-        uses: ./
-        with:
-          token: ${{secrets.SEC}}
-          tag: ${{ steps.tag.outputs.value }}
+          version: ${{ steps.tag.outputs.value }}
+          operation: release
           
       # Create release.
       - uses: actions/create-release@v1
@@ -70,7 +64,7 @@ jobs:
           release_name: Release ${{ steps.tag.outputs.value }}
           body: |
                   ${{ steps.bumpr.outputs.message }}
-                  ${{ steps.changelog.outputs.changes }}
+                  ${{ steps.get-changelog.outputs.changelog }}
           generate_release_notes: true
           draft: false
           prerelease: false
