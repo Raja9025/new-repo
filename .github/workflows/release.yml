@@ -55,10 +55,12 @@ jobs:
         uses: TriPSs/conventional-changelog-action@v3.7.1
         with:
           github-token: ${{secrets.SEC}}
+          skip-version-file: 'true'
+          skip-on-empty: 'false'
           
       # Create release.
       - uses: actions/create-release@v1
-        if: "steps.tag.outputs.value != ''"
+        if: "steps.tag.outputs.value != ''" 
         env:
           # This token is provided by Actions, you do not need to create your own token
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
