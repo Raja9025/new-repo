@@ -46,6 +46,11 @@ jobs:
           if_false: ${{ steps.bumpr.outputs.next_version }}
           
   #Create ChangeLog
+      - name: Checkout Code
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+
       - name: Update CHANGELOG
         id: changelog
         uses: ./
